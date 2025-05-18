@@ -10,7 +10,7 @@ using Task_Management_API.Model.DTO;
 
 namespace Task_Management_API.Controllers
 {
-    // https://localhost:7298/api/tasks
+    // https://localhost:7298/api/TaskManagement
     [Route("api/[controller]")]
     [ApiController]
     public class TaskManagementController : ControllerBase
@@ -27,7 +27,7 @@ namespace Task_Management_API.Controllers
             this.mapper = mapper;
         }
 
-        // GET : https://localhost:7298/api/tasks
+        // GET :https://localhost:7298/api/TaskManagement
         [HttpGet]
         public async Task<IActionResult> GetAllTasks()
         {
@@ -50,7 +50,7 @@ namespace Task_Management_API.Controllers
            
         }
 
-        // GET : https://localhost:7298/api/tasks/{id}
+        // GET :https://localhost:7298/api/TaskManagement/{id}
         [HttpGet]
         [Route("{id:int}")]
         public async Task<IActionResult> GetTaskById([FromRoute] int id)
@@ -73,7 +73,7 @@ namespace Task_Management_API.Controllers
             }
         }
 
-        // POST : https://localhost:7298/api/tasks
+        // POST : https://localhost:7298/api/TaskManagement
         [HttpPost]
         public async Task<IActionResult> CreateTask([FromBody] AddTaskDto addTaskDto)
         {
@@ -114,7 +114,7 @@ namespace Task_Management_API.Controllers
             }
         }
 
-        // PUT : https://localhost:7298/api/tasks
+        // PUT : https://localhost:7298/api/TaskManagement
         [HttpPut]
         [Route("{id:int}")]
         public async Task<IActionResult> UpdateTask([FromRoute] int id , [FromBody] UpdateTaskDto updateTaskDto)
@@ -157,7 +157,7 @@ namespace Task_Management_API.Controllers
             
         }
 
-        // DELETE : https://localhost:7298/api/tasks/{id}
+        // DELETE : https://localhost:7298/api/TaskManagement{id}
         [HttpDelete]
         [Route("{id:int}")]
         public async Task<IActionResult> DeleteTask([FromRoute] int id)
