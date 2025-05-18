@@ -23,13 +23,13 @@ namespace Task_Management_API.Controllers
 
         // GET : https://localhost:7298/api/tasks
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAllTasks()
         {
             List<TaskManagement> tasks = await dbcontext.Tasks.ToListAsync();
             return Ok(tasks);
         }
 
-        // GET : https://localhost:7298/api/tasks/id
+        // GET : https://localhost:7298/api/tasks/{id}
         [HttpGet]
         [Route("{id:int}")]
         public async Task<IActionResult> GetTaskById([FromRoute] int id)
@@ -42,19 +42,27 @@ namespace Task_Management_API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateTask([FromBody] AddTaskDto addTaskDto)
         {
-            var taskDomin = new TaskManagement
+            if (ModelState.IsValid)
             {
-                Id = addTaskDto.Id,
-                Title = addTaskDto.Title,
-                Description = addTaskDto.Description,
-                DueDate = addTaskDto.DueDate,
-                IsCompleted = addTaskDto.IsCompleted,
-            };
+                var taskDomin = new TaskManagement
+                {
+                    Id = addTaskDto.Id,
+                    Title = addTaskDto.Title,
+                    Description = addTaskDto.Description,
+                    DueDate = addTaskDto.DueDate,
+                    IsCompleted = addTaskDto.IsCompleted,
+                };
 
-            await dbcontext.Tasks.AddAsync(taskDomin);
-            await dbcontext.SaveChangesAsync();
+                await dbcontext.Tasks.AddAsync(taskDomin);
+                await dbcontext.SaveChangesAsync();
 
-            return Ok(taskDomin);
+                return Ok(taskDomin);
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+            
 
         }
 
@@ -63,23 +71,31 @@ namespace Task_Management_API.Controllers
         [Route("{id:int}")]
         public async Task<IActionResult> UpdateTask([FromRoute] int id , [FromBody] UpdateTaskDto updateTaskDto)
         {
-            var taskDomain =  await dbcontext.Tasks.SingleOrDefaultAsync(x =>x.Id == id);
-
-            if (taskDomain == null)
+            if (ModelState.IsValid)
             {
-                return NotFound();
-            }
+                var taskDomain = await dbcontext.Tasks.SingleOrDefaultAsync(x => x.Id == id);
 
-            taskDomain.Title = updateTaskDto.Title;
-            taskDomain.Description = updateTaskDto.Description;
-            taskDomain.DueDate = updateTaskDto.DueDate;
-            taskDomain.IsCompleted = updateTaskDto.IsCompleted;
-          
-            await dbcontext.SaveChangesAsync();
-            return Ok(taskDomain);
+                if (taskDomain == null)
+                {
+                    return NotFound();
+                }
+
+                taskDomain.Title = updateTaskDto.Title;
+                taskDomain.Description = updateTaskDto.Description;
+                taskDomain.DueDate = updateTaskDto.DueDate;
+                taskDomain.IsCompleted = updateTaskDto.IsCompleted;
+
+                await dbcontext.SaveChangesAsync();
+                return Ok(taskDomain);
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+            
         }
 
-        // DELETE : https://localhost:7298/api/tasks
+        // DELETE : https://localhost:7298/api/tasks/{id}
         [HttpDelete]
         [Route("{id:int}")]
         public async Task<IActionResult> DeleteTask([FromRoute] int id)
@@ -96,6 +112,5 @@ namespace Task_Management_API.Controllers
 
             return Ok(task);
         }
-
     }
 }
