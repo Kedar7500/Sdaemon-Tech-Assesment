@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Task_Management_API.Data;
+using Task_Management_API.Mappings;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<TaskManagementDbcontext>(options =>
 options.UseInMemoryDatabase(builder.Configuration.GetConnectionString("TaskManagementDB")));
 
+// inject automapper
+builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -31,6 +36,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// Add this after app is created but before your controllers are mapped
+app.UseCors("AllowAll");
 
 app.UseHttpsRedirection();
 

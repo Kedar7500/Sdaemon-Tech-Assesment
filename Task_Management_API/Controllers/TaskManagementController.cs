@@ -71,7 +71,6 @@ namespace Task_Management_API.Controllers
                 logger.LogError(ex.Message);
                 return StatusCode(500, "Internal server error.");
             }
-            
         }
 
         // POST : https://localhost:7298/api/tasks
@@ -82,9 +81,9 @@ namespace Task_Management_API.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var taskDomain = mapper.Map<TaskManagement>(addTaskDto);
+                     var taskDomain = mapper.Map<TaskManagement>(addTaskDto);
 
-                    //var taskDomin = new TaskManagement
+                    //var taskDomain = new TaskManagement
                     //{
                     //    Id = addTaskDto.Id,
                     //    Title = addTaskDto.Title,
@@ -100,7 +99,7 @@ namespace Task_Management_API.Controllers
 
                     var taskDto = mapper.Map<TaskManagementDto>(taskDomain);
 
-                    return CreatedAtAction(nameof(GetTaskById), new { id = taskDomain.Id }, taskDto);
+                    return CreatedAtAction(nameof(GetTaskById), new { id = taskDomain.Id }, taskDomain);
                 }
                 else
                 {
@@ -113,9 +112,6 @@ namespace Task_Management_API.Controllers
                 logger.LogError(ex.Message);
                 return StatusCode(500, "Internal server error.");
             }
-
-
-
         }
 
         // PUT : https://localhost:7298/api/tasks
@@ -127,7 +123,9 @@ namespace Task_Management_API.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var taskDomain = await dbcontext.Tasks.SingleOrDefaultAsync(x => x.Id == id);
+                    var taskDomain = mapper.Map<TaskManagement>(updateTaskDto);
+
+                    taskDomain = await dbcontext.Tasks.SingleOrDefaultAsync(x => x.Id == id);
 
                     if (taskDomain == null)
                     {
@@ -140,7 +138,10 @@ namespace Task_Management_API.Controllers
                     taskDomain.IsCompleted = updateTaskDto.IsCompleted;
 
                     await dbcontext.SaveChangesAsync();
-                    return Ok(taskDomain);
+
+                    var taskDto = mapper.Map<TaskManagementDto>(taskDomain);
+
+                    return Ok(taskDto);
                 }
                 else
                 {
@@ -180,7 +181,6 @@ namespace Task_Management_API.Controllers
                 logger.LogError(ex.Message);
                 return StatusCode(500, "Internal server error.");
             }
-            
         }
     }
 }
