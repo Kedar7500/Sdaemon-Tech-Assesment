@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
@@ -16,11 +17,14 @@ namespace Task_Management_API.Controllers
     {
         private readonly TaskManagementDbcontext dbcontext;
         private readonly ILogger<TaskManagementController> logger;
+        private readonly IMapper mapper;
 
-        public TaskManagementController(TaskManagementDbcontext dbcontext, ILogger<TaskManagementController> logger)
+        public TaskManagementController(TaskManagementDbcontext dbcontext, ILogger<TaskManagementController> logger,
+            IMapper mapper)
         {
             this.dbcontext = dbcontext;
             this.logger = logger;
+            this.mapper = mapper;
         }
 
         // GET : https://localhost:7298/api/tasks
@@ -78,19 +82,25 @@ namespace Task_Management_API.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var taskDomin = new TaskManagement
-                    {
-                        Id = addTaskDto.Id,
-                        Title = addTaskDto.Title,
-                        Description = addTaskDto.Description,
-                        DueDate = addTaskDto.DueDate,
-                        IsCompleted = addTaskDto.IsCompleted,
-                    };
+                    var taskDomain = mapper.Map<TaskManagement>(addTaskDto);
 
-                    await dbcontext.Tasks.AddAsync(taskDomin);
+                    //var taskDomin = new TaskManagement
+                    //{
+                    //    Id = addTaskDto.Id,
+                    //    Title = addTaskDto.Title,
+                    //    Description = addTaskDto.Description,
+                    //    DueDate = addTaskDto.DueDate,
+                    //    IsCompleted = addTaskDto.IsCompleted,
+                    //};
+
+                    if (taskDomain == null) { return NotFound(); }  
+
+                    await dbcontext.Tasks.AddAsync(taskDomain);
                     await dbcontext.SaveChangesAsync();
 
-                    return CreatedAtAction(nameof(GetTaskById), new { id = taskDomin.Id }, taskDomin);
+                    var taskDto = mapper.Map<TaskManagementDto>(taskDomain);
+
+                    return CreatedAtAction(nameof(GetTaskById), new { id = taskDomain.Id }, taskDto);
                 }
                 else
                 {

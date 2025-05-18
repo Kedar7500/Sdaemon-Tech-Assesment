@@ -8,7 +8,9 @@ namespace Task_Management_API.Mappings
     {
         public AutoMapperProfiles()
         {
+            CreateMap<TaskManagement, TaskManagementDto>().ReverseMap();
             CreateMap<TaskManagement, AddTaskDto>().ReverseMap();
+            CreateMap<TaskManagement, UpdateTaskDto>().ReverseMap();
         }
     }
 }
