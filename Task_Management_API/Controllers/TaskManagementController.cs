@@ -114,7 +114,7 @@ namespace Task_Management_API.Controllers
             }
         }
 
-        // PUT : https://localhost:7298/api/TaskManagement
+        // PUT : https://localhost:7298/api/TaskManagement/{id}
         [HttpPut]
         [Route("{id:int}")]
         public async Task<IActionResult> UpdateTask([FromRoute] int id , [FromBody] UpdateTaskDto updateTaskDto)
