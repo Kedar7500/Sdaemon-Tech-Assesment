@@ -1,7 +1,17 @@
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using Task_Management_API.Data;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// logger configuration
+var logger = new LoggerConfiguration()
+            .WriteTo.Console()
+            .MinimumLevel.Information()
+            .CreateLogger();
+
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog(logger);
 
 // Add services to the container.
 
