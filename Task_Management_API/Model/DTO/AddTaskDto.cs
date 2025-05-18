@@ -1,6 +1,6 @@
-﻿namespace Task_Management_API.Model.Domain
+﻿namespace Task_Management_API.Model.DTO
 {
-    public class Task
+    public class AddTaskDto
     {
         public int Id { get; set; }
         public string Title { get; set; }
