@@ -37,9 +37,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// Add this after app is created but before your controllers are mapped
-app.UseCors("AllowAll");
-
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

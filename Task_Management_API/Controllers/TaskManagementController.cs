@@ -174,7 +174,7 @@ namespace Task_Management_API.Controllers
                 dbcontext.Tasks.Remove(task);
                 await dbcontext.SaveChangesAsync();
 
-                return Ok(task);
+                return NoContent();
             }
             catch (Exception ex) 
             {
